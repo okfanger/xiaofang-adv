@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//cn.akfang.advanture.mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="reg">
+
+    <select id="checkUserExists" parameterType="hashmap" resultType="hashmap">
+        select * from `player_profile` where nick_name=#{nick_name};
+    </select>
+
+    <insert id="insertUser"  parameterType="hashmap" useGeneratedKeys="true" keyProperty="player_id" >
+        INSERT INTO `player_profile` (`player_id`,`nick_name`,`password`,`registered_date`) VALUES (#{player_id},#{nick_name},#{password},#{registered_date});
+    </insert>
+
+    <insert id="initNewUserCondition"  parameterType="hashmap" >
+        INSERT INTO `player_condition` (`player_id`,`hp`,`mp`,`money`,`attack`) VALUES (#{player_id},#{hp},#{mp},#{money},#{attack});
+    </insert>
+
+    <select id="getAliasList"  parameterType="hashmap"  resultType="hashmap">
+        select * from object_alias
+    </select>
+
+    <select id="getObjectBox"  parameterType="hashmap"  resultType="hashmap">
+            select * from player_box where owner_id=#{owner_id}
+    </select>
+    <select id="getObjectClass"  parameterType="hashmap"  resultType="hashmap">
+            select * from object_property
+    </select>
+
+    <select id="getPlayerCondition"  parameterType="hashmap"  resultType="hashmap">
+        select * from player_condition where player_id=#{player_id}
+    </select>
+
+    <update id="updatePlayerBoxItem" parameterType="hashmap" >
+        update `player_box` set `amount`=#{amount} where object_id=#{object_id}
+    </update>
+
+    <update id="updatePlayerConditionHp" parameterType="hashmap" >
+        update `player_condition` set `hp`=#{hp} where player_id=#{player_id}
+    </update>
+    <update id="updatePlayerConditionMp" parameterType="hashmap" >
+        update `player_condition` set `mp`=#{mp} where player_id=#{player_id}
+    </update>
+    <update id="updatePlayerConditionMoney" parameterType="hashmap" >
+        update `player_condition` set `money`=#{money} where player_id=#{player_id}
+    </update>
+
+    <insert id="insertItemInPlayerBox" useGeneratedKeys="true" keyProperty="object_id">
+        insert into `player_box` (`object_id`,`owner_id`,`class_id`,`amount`) values (#{object_id},#{owner_id},#{class_id},#{amount})
+    </insert>
+
+    <delete id="removeNullItemInPlayBox" parameterType="hashmap">
+        delete from player_box where object_id=#{object_id} and owner_id=#{owner_id}
+    </delete>
+
+</mapper>
+
